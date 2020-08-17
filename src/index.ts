@@ -1,6 +1,6 @@
 import express from 'express';
 import authRoutes from './routes/auth';
-import postRoutes from './routes/posts';
+import postRoutes from './routes/test';
 import connectToDB from './db/connect';
 import dotenv from 'dotenv';
 
