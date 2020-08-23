@@ -4,28 +4,38 @@ import postRoutes from './routes/test';
 import connectToDB from './db/connect';
 import dotenv from 'dotenv';
 
+/**
+ * Initialise application
+ */
 const app = express();
 const port = 8080;
-
 dotenv.config();
-
 connectToDB(); 
+
+/**
+ * Setup express to our liking
+ */
 app.use(express.json());
+app.disable('x-powered-by');
 
-
+/**
+ * Routing setup
+ */
 const authRoute = authRoutes;
 const postRoute = postRoutes;
-
-const server = app.listen(port, () => {
-  // tslint:disable-next-line:no-console
-  console.log(`Server started at http://localhost:${ port }`);
-});
-
 
 app.use('/api/user', authRoute);
 app.use('/api/posts', postRoute)
 app.route('/').get((req, res) => {
   res.send('Hi there, big sausage');
+});
+
+/**
+ * Server run
+ */
+const server = app.listen(port, () => {
+  // tslint:disable-next-line:no-console
+  console.log(`Server started at http://localhost:${ port }`);
 });
 
 /**
