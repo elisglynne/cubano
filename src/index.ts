@@ -3,12 +3,14 @@ import authRoutes from './routes/auth';
 import postRoutes from './routes/test';
 import connectToDB from './db/connect';
 import dotenv from 'dotenv';
+import chalk from 'chalk';
 
 /**
  * Initialise application
  */
 const app = express();
 const port = 8080;
+const log = console.log;
 dotenv.config();
 connectToDB(); 
 
@@ -34,8 +36,7 @@ app.route('/').get((req, res) => {
  * Server run
  */
 const server = app.listen(port, () => {
-  // tslint:disable-next-line:no-console
-  console.log(`Server started at http://localhost:${ port }`);
+  log(chalk.green(`Server started at http://localhost:${ port }`));
 });
 
 /**
