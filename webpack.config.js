@@ -1,60 +1,42 @@
 const path = require('path');
+const nodeExternals =  require('webpack-node-externals');
+const webpack = require('webpack');
 
 const isProduction = typeof NODE_ENV !== 'undefined' && NODE_ENV === 'production';
 const mode = isProduction ? 'production' : 'development';
 const devtool = isProduction ? false : 'inline-source-map';
-module.exports = [
-  {
-    entry: './src/client.ts',
-    target: 'web',
-    mode,
-    devtool,
-    module: {
-      rules: [
-        {
-          test: /\.tsx?$/,
-          use: 'ts-loader',
-          exclude: /node_modules/,
-          options: {
-            compilerOptions: {
-              "sourceMap": !isProduction,
-            }
-          }
-        }
-      ]
-    },
-    resolve: {
-      extensions: [ '.tsx', '.ts', '.js' ]
-    },
-    output: {
-      filename: 'client.js',
-      path: path.join(__dirname, 'dist', 'public')
-    }
+
+module.exports = {
+  entry: ["webpack/hot/poll?100", "./src/index.ts"],
+  watch: true,
+  target: "node",
+  externals: [
+    nodeExternals({
+      allowlist: ["webpack/hot/poll?100"]
+    })
+  ],
+  module: {
+    rules: [
+      {
+        test: /.tsx?$/,
+        use: "ts-loader",
+        exclude: /node_modules/
+      }
+    ]
   },
-  {
-    entry: './src/server.ts',
-    target: 'node',
-    mode,
-    devtool,
-    module: {
-      rules: [
-        {
-          test: /\.tsx?$/,
-          use: 'ts-loader',
-          exclude: /node_modules/
-        }
-      ]
-    },
-    resolve: {
-      extensions: [ '.tsx', '.ts', '.js' ]
-    },
-    output: {
-      filename: 'server.js',
-      path: path.resolve(__dirname, 'dist')
-    },
-    node: {
-      __dirname: false,
-      __filename: false,
-    }
+  mode,
+  devtool,
+  resolve: {
+    extensions: [".tsx", ".ts", ".js"]
+  },
+  plugins: [new webpack.HotModuleReplacementPlugin],
+  output: {
+    path: path.join(__dirname, "dist"),
+    filename: "index.js",
+    publicPath: './dist',
+  },
+  node: {
+    __dirname: false,
+    __filename: false,
   }
-];
+};
